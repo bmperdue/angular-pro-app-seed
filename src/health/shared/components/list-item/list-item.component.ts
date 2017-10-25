@@ -8,7 +8,12 @@ import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from 
 <div class="list-item">
   <a [routerLink]="getRoute(item)">
     <p class="list-item__name">{{item.name}}</p>
-    <p class="list-item__ingredients"><span>{{item.ingredients}}</span></p>
+    <p class="list-item__ingredients">
+      <span *ngIf="item.ingredients; else showWorkout">{{item.ingredients | join}}</span>
+    </p>
+    <ng-template #showWorkout>
+      <span>{{item | workout}}</span>
+    </ng-template>
   </a>
 
   <div *ngIf="toggled" class="list-item__delete" >
@@ -35,7 +40,7 @@ export class ListItemComponent {
   constructor() { }
 
   getRoute(item: any) {
-    return [`../meals`, item.$key]
+    return [`../${item.ingredients ? 'meals' : 'workouts'}`, item.$key]
   }
 
   removeItem() {
